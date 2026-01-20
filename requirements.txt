@@ -1,0 +1,2 @@
+echo "flask
+gunicorn" > requirements.txt
