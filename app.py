@@ -3,7 +3,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return 'Hello from Azure App Service (PaaS)!'
+    return 'J aime la bière'
 
 if __name__ == "__main__":
     app.run()
