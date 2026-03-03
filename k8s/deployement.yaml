@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app
+  namespace: default
+spec:
+  [cite_start]replicas: 2 # Scalabilité [cite: 10]
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      containers:
+      - name: flask-app
+        [cite_start]image: ghcr.io/loic-tresor/mon-app-flask:latest # Ton image sur GHCR [cite: 22, 86]
+        ports:
+        - containerPort: 5000
+        [cite_start]resources: # Contraintes de ressources [cite: 75]
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "250m"
+            memory: "256Mi"
+        [cite_start]livenessProbe: # Vérification de vie [cite: 40, 76]
+          httpGet:
+            path: /healthz
+            port: 5000
+        [cite_start]readinessProbe: # Vérification de disponibilité [cite: 42, 76]
+          httpGet:
+            path: /readyz
+            port: 5000
+        env:
+        - name: AZURE_STORAGE_CONNECTION_STRING
+          valueFrom:
+            secretKeyRef:
+              [cite_start]name: azure-storage-secret # Secret Kubernetes [cite: 73, 105]
+              key: connection-string
